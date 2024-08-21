@@ -6,6 +6,14 @@ class Product:
         self.__price = price
         self.quantity = quantity
 
+    def __str__(self):
+        """Возвращает строковое представление экземпляра класса Product."""
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+
+    def __add__(self, other):
+        """Сложение стоимости товара."""
+        return self.__price * self.quantity + other.__price * other.quantity
+
     @classmethod
     def new_product(cls, product_data):
         """Создает новый экземпляр класса Product на основе данных."""
@@ -42,6 +50,10 @@ class Category:
         self.__products = products
         Category.product_count += len(products)
         Category.category_count += 1
+
+    def __str__(self):
+        """Возвращает строковое представление экземпляра класса Category."""
+        return f"{self.name}, количество продуктов: {Category.product_count} шт."
 
     def add_product(self, products):
         """Добавляет новый продукт в категорию."""
