@@ -1,6 +1,20 @@
-class Product:
+from abc import ABC, abstractmethod
+
+
+class MixinLog:
+    """Миксин для логирования"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        class_name = self.__class__.__name__
+        params = ", ".join(f"{arg}" for arg in args)
+        print(f"{class_name} создан с параметрами:{params}")
+
+
+class BaseProduct(ABC):
+    """Абстрактный класс"""
+
     def __init__(self, name: str, description: str, price: float, quantity: int):
-        """Инициализирует новый экземпляр класса Product."""
         self.name = name
         self.description = description
         self.__price = price
@@ -17,15 +31,10 @@ class Product:
         return self.__price * self.quantity + other.__price * other.quantity
 
     @classmethod
-    def new_product(cls, product_data):
+    @abstractmethod
+    def new_product(cls, product_data: dict, existing_products: list):
         """Создает новый экземпляр класса Product на основе данных."""
-        product = cls(
-            name=product_data["name"],
-            description=product_data["description"],
-            price=product_data["price"],
-            quantity=product_data["quantity"],
-        )
-        return product
+        pass
 
     @property
     def price(self):
@@ -39,6 +48,35 @@ class Product:
             print("Цена не должна быть нулевая или отрицательная")
         else:
             self.__price = price
+
+    @abstractmethod
+    def update_quantity(self, quantity: int):
+        """Изменяет количество товара."""
+        pass
+
+    @abstractmethod
+    def delete_product(self):
+        pass
+
+
+class Product(MixinLog, BaseProduct):
+    @classmethod
+    def new_product(cls, product_data: dict, existing_products: list):
+        for existing_product in existing_products:
+            if existing_product.name == product_data["name"]:
+                existing_product.quantity += product_data["quantity"]
+                existing_product.price = min(existing_product.price, product_data["price"])
+                return existing_product
+
+        return cls(product_data["name"], product_data["description"], product_data["price"], product_data["quantity"])
+
+    def update_quantity(self, quantity: int):
+        if quantity < 0:
+            raise ValueError("Количество должно быть неотрицательным целым числом")
+        self.quantity = quantity
+
+    def delete_product(self):
+        self.quantity = 0
 
 
 class Smartphone(Product):

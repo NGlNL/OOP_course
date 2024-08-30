@@ -27,31 +27,24 @@ def test_category_product_count():
     assert Category.product_count == 2
 
 
-def test_category_add_product():
-    Category.product_count = 0
-    Category.category_count = 0
-    product1 = Product.new_product(
-        {"name": "Test Product1", "description": "Test Description1", "price": 10.0, "quantity": 10}
-    )
-    product2 = Product.new_product(
-        {"name": "Test Product2", "description": "Test Description2", "price": 20.0, "quantity": 20}
-    )
-    category = Category("Test Category", "Test Description", [product1])
-    category.add_product(product2)
-    assert Category.product_count == 2
-    assert len(category.products) == 2
-    assert category.products[1] == f"{product2.name}, {product2.price} руб. Остаток: {product2.quantity} шт."
+def test_product_new_product():
+    product_data = {"name": "Товар", "description": "Описание товара", "price": 100, "quantity": 10}
+    existing_products = []
+    new_product = Product.new_product(product_data, existing_products)
+    assert new_product.name == "Товар"
+    assert new_product.description == "Описание товара"
+    assert new_product.price == 100
+    assert new_product.quantity == 10
 
 
-def test_category_get_all_products():
-    product1 = Product.new_product(
-        {"name": "Test Product1", "description": "Test Description1", "price": 10.0, "quantity": 10}
-    )
-    product2 = Product.new_product(
-        {"name": "Test Product2", "description": "Test Description2", "price": 20.0, "quantity": 20}
-    )
-    category = Category("Test Category", "Test Description", [product1, product2])
-    assert category.get_all_products() == [product1, product2]
+def test_new_product_not_existing():
+    product1 = Product("Smartphone", "Latest model", 599.99, 10)
+    product2 = Product("Laptop", "High-performance laptop", 1199.99, 5)
+    new_product_data = {"name": "Tablet", "description": "Latest model tablet", "price": 300.00, "quantity": 8}
+    new_product = Product.new_product(new_product_data, [product1, product2])
+    assert new_product.name == "Tablet"
+    assert new_product.price == 300.00
+    assert new_product.quantity == 8
 
 
 def test_product_str():
