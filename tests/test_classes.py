@@ -1,4 +1,4 @@
-from src.classes import Category, Product
+from src.classes import Category, LawnGrass, Product, Smartphone
 
 
 def test_product_creation():
@@ -55,13 +55,13 @@ def test_category_get_all_products():
 
 
 def test_product_str():
-    product = Product('Товар', 'Описание товара', 100.0, 5)
-    assert str(product) == 'Товар, 100.0 руб. Остаток: 5 шт.'
+    product = Product("Товар", "Описание товара", 100.0, 5)
+    assert str(product) == "Товар, 100.0 руб. Остаток: 5 шт."
 
 
 def test_product_add():
-    product1 = Product('Товар1', 'Описание товара1', 100.0, 5)
-    product2 = Product('Товар2', 'Описание товара2', 200.0, 10)
+    product1 = Product("Товар1", "Описание товара1", 100.0, 5)
+    product2 = Product("Товар2", "Описание товара2", 200.0, 10)
     assert product1 + product2 == 100.0 * 5 + 200.0 * 10
 
 
@@ -72,6 +72,48 @@ def test_category_str():
     category1 = Category(
         "Смартфоны",
         "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни",
-        [product1, product2]
+        [product1, product2],
     )
-    assert str(category1) == 'Смартфоны, количество продуктов: 13 шт.'
+    assert str(category1) == "Смартфоны, количество продуктов: 13 шт."
+
+
+def test_smartphone_initialization():
+    smartphone = Smartphone(
+        name="iPhone 14",
+        description="Смартфон от Apple",
+        price=99999.99,
+        quantity=5,
+        efficiency=90.0,
+        model="iPhone 14",
+        memory=128,
+        color="черный",
+    )
+
+    assert smartphone.name == "iPhone 14"
+    assert smartphone.description == "Смартфон от Apple"
+    assert smartphone.price == 99999.99
+    assert smartphone.quantity == 5
+    assert smartphone.efficiency == 90.0
+    assert smartphone.model == "iPhone 14"
+    assert smartphone.memory == 128
+    assert smartphone.color == "черный"
+
+
+def test_lawn_grass_initialization():
+    lawn_grass = LawnGrass(
+        name="Садовая трава",
+        description="Трава для сада",
+        price=499.99,
+        quantity=10,
+        country="Россия",
+        germination_period="10 дней",
+        color="зеленый",
+    )
+
+    assert lawn_grass.name == "Садовая трава"
+    assert lawn_grass.description == "Трава для сада"
+    assert lawn_grass.price == 499.99
+    assert lawn_grass.quantity == 10
+    assert lawn_grass.country == "Россия"
+    assert lawn_grass.germination_period == "10 дней"
+    assert lawn_grass.color == "зеленый"
