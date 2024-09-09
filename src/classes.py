@@ -15,6 +15,8 @@ class BaseProduct(ABC):
     """Абстрактный класс"""
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
+        if quantity <= 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен.")
         self.name = name
         self.description = description
         self.__price = price
@@ -60,6 +62,7 @@ class BaseProduct(ABC):
 
 
 class Product(MixinLog, BaseProduct):
+
     @classmethod
     def new_product(cls, product_data: dict, existing_products: list):
         for existing_product in existing_products:
@@ -138,6 +141,17 @@ class Category:
             raise TypeError("Объект должен быть классом Product.")
         self.__products.append(products)
         Category.product_count += 1
+
+    def middle_price(self) -> float:
+        """Возвращает среднюю цену продуктов в категории."""
+        try:
+            total_price = sum(product.price * product.quantity for product in self.__products)
+            total_quantity = sum(product.quantity for product in self.__products)
+            average = total_price / total_quantity
+        except ZeroDivisionError:
+            print("На ноль делить нельзя")
+            return 0
+        return round(average, 2)
 
     @property
     def products(self):
